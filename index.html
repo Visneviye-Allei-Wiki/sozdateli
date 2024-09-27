@@ -1,27 +1,353 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создатели</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Создатели - Вишневые Аллеи Вики</title>
     <link rel="icon" href="images/icon.png" type="image/png" sizes="512x512">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+        }
+        body.light-theme {
+            background-color: #ffc0cb;
+            color: #333;
+        }
+        body.dark-theme {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .sidebar {
+            width: 10px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 20px 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        .sidebar:hover {
+            width: 250px;
+            padding: 20px;
+        }
+        .light-theme .sidebar {
+            background-color: #ffb6c1;
+            border-right: 1px solid #d147a3;
+        }
+        .dark-theme .sidebar {
+            background-color: #2a2a2a;
+            border-right: 1px solid #ff9cc2;
+        }
+        .main-content {
+            margin-left: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+            width: calc(100% - 10px);
+            transition: margin-left 0.3s ease;
+        }
+        .sidebar:hover + .main-content {
+            margin-left: 250px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .light-theme .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .dark-theme .container {
+            background-color: rgba(30, 30, 30, 0.9);
+            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            max-width: 25%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .header img:hover {
+            transform: scale(1.05);
+        }
+        .header h1 {
+            margin-top: 10px;
+            transition: color 0.3s;
+        }
+        .light-theme .header h1 {
+            color: #d147a3;
+        }
+        .dark-theme .header h1 {
+            color: #ff9cc2;
+        }
+        .content {
+            margin-bottom: 20px;
+        }
+        .navigation {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar:hover .navigation {
+            opacity: 1;
+        }
+        .navigation a {
+            display: block;
+            margin: 10px 0;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .light-theme .navigation a {
+            background-color: #fff;
+            color: #d147a3;
+        }
+        .dark-theme .navigation a {
+            background-color: #3a3a3a;
+            color: #ff9cc2;
+        }
+        .light-theme .navigation a:hover {
+            background-color: #d147a3;
+            color: #fff;
+        }
+        .dark-theme .navigation a:hover {
+            background-color: #ff9cc2;
+            color: #121212;
+        }
+        h2 {
+            transition: color 0.3s;
+        }
+        .light-theme h2 {
+            color: #d147a3;
+        }
+        .dark-theme h2 {
+            color: #ff9cc2;
+        }
+        a {
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .light-theme a {
+            color: #d147a3;
+        }
+        .dark-theme a {
+            color: #ff9cc2;
+        }
+        .light-theme a:hover {
+            color: #ff69b4;
+        }
+        .dark-theme a:hover {
+            color: #ffc0cb;
+        }
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar:hover .theme-switch {
+            opacity: 1;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #d147a3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .theme-switch span {
+            margin-left: 10px;
+        }
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 5px;
+            left: 5px;
+            z-index: 1001;
+            background-color: #ffb6c1;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .dark-theme .mobile-menu-toggle {
+            background-color: #2a2a2a;
+            color: #ff9cc2;
+        }
+        .divider {
+            border-top: 2px solid #d147a3;
+            margin: 20px 0;
+            transition: border-color 0.3s;
+        }
+        .dark-theme .divider {
+            border-color: #ff9cc2;
+        }
+        .creator {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(209, 71, 163, 0.3);
+        }
+        .dark-theme .creator {
+            border-bottom-color: rgba(255, 156, 194, 0.3);
+        }
+        .creator:last-child {
+            border-bottom: none;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                padding: 0;
+            }
+            .sidebar.active {
+                width: 250px;
+                padding: 20px;
+            }
+            .navigation {
+                margin-top: 60px;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .sidebar:hover + .main-content {
+                margin-left: 0;
+            }
+            .mobile-menu-toggle {
+                display: block;
+            }
+            .navigation, .theme-switch {
+                opacity: 1;
+            }
+            .header img {
+                max-width: 50%;
+            }
+        }
+    </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <a href="https://visneviye-allei-wiki.github.io/Wiki/">
-                <img src="images/bannerwiki.png" alt="Добро пожаловать на Вишневые Аллеи Вики" class="banner">
-            </a>
-        </div>
-        
-        <div class="main-content">
-            <div class="content">
-                <h2>Создатели</h2>
-                <p>Rocker7003 - Писатель, создатель</p>
-                <p>Mrshrimp58 - Писатель, редактор</p>
-            </div>
+<body class="light-theme">
+    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+    <div class="sidebar" id="sidebar">
+        <nav class="navigation">
+            <a href="https://visneviye-allei-wiki.github.io/Pages/">Все Статьи Вики</a>
+            <a href="#">Категории</a>
+            <a href="https://discord.gg/sAkkMxgh7f">Вики Сообщества</a>
+            <a href="https://visneviye-allei-wiki.github.io/sozdateli/">Создатели/Редакторы Вики</a>
+        </nav>
+        <div class="theme-switch">
+            <label class="switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span>
+            </label>
+            <span>Темная тема</span>
         </div>
     </div>
+    <div class="main-content">
+        <div class="container">
+            <header class="header">
+                <a href="https://visneviye-allei-wiki.github.io/wiki/">
+                    <img src="images/bannerwiki.png" alt="Вишневые Аллеи Вики">
+                </a>
+                <h1>Создатели Вики</h1>
+            </header>
+
+            <div class="divider"></div>
+
+            <main class="content">
+                <h2>Создатели и редакторы</h2>
+                <div class="creator">
+                    <p><strong>Rocker7003</strong> - Писатель, создатель</p>
+                </div>
+                <div class="creator">
+                    <p><strong>Mrshrimp58</strong> - Писатель, редактор</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        function setTheme(isDark) {
+            if (isDark) {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+            } else {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+            }
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        themeToggle.addEventListener('change', (event) => {
+            setTheme(event.target.checked);
+        });
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                themeToggle.checked = true;
+                setTheme(true);
+            }
+        });
+
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
